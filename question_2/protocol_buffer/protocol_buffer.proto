@@ -23,11 +23,17 @@ message FuncVersion {
   string fnDef = 7;
 }
 
-message AddFnRequest { Func fn = 1; }
+message AddFnRequest {
+  Func fn = 1;
+  FuncVersion vs = 2;
+}
 message AddFnResponse { string message = 1; }
 
-message AddFnsRequest { Func fn = 1; }
-message AddFnsResponse { repeated string funcNames = 1; }
+message AddFnsRequest {
+  Func func = 1;
+  FuncVersion vs = 2;
+}
+message AddFnsResponse { repeated string results = 1; }
 
 message DeleteFnRequest {
   string funcName = 1;
@@ -39,13 +45,13 @@ message ShowFnRequest {
   string funcName = 1;
   int32 versionNum = 2;
 }
-message ShowFnResponse { Func fn = 1; }
+message ShowFnResponse { FuncVersion vs = 1; }
 
 message ShowAllFnsRequest { string funcName = 1; }
-message ShowAllFnsResponse { Func fn = 1; }
+message ShowAllFnsResponse { FuncVersion vs = 1; }
 
 message ShowAllWithCritRequest {
   string lang = 1;
   repeated string keywords = 2;
 }
-message ShowAllWithCritResponse { repeated Func fns = 1; }
+message ShowAllWithCritResponse { repeated FuncVersion versions = 1; }

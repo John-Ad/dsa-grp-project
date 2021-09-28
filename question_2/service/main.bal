@@ -136,6 +136,7 @@ service "ReposityOfFunctions" on ep {
                             funcsToAdd.push(request.func);
                             // add version 
                             versionsToAdd[func.name] = request.vs;
+                            response.results.push("successfully added fn version: " + request.func.name);
                         }
                     }
                 }
@@ -150,6 +151,7 @@ service "ReposityOfFunctions" on ep {
                     funcsToAdd.push(request.func);
                     // add version 
                     versionsToAdd[request.func.name] = request.vs;
+                    response.results.push("successfully added fn: " + request.func.name);
                 }
             }
         });
@@ -168,7 +170,6 @@ service "ReposityOfFunctions" on ep {
                 functions.push(func);
                 funcVersions[func.name] = [versionsToAdd.get(func.name)];
             }
-            response.results.push("added func: " + func.name);
         }
 
         return response;

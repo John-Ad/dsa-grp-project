@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+service ReposityOfFunctions {
+  rpc add_new_fn(AddFnRequest) returns (AddFnResponse);
+  rpc add_fns(stream AddFnsRequest) returns (AddFnsResponse);
+  rpc delete_fn(DeleteFnRequest) returns (DeleteFnResponse);
+  rpc show_fn(ShowFnRequest) returns (ShowFnResponse);
+  rpc show_all_fns(ShowAllFnsRequest) returns (stream ShowAllFnsResponse);
+  rpc show_all_with_criteria(stream ShowAllWithCritRequest)
+      returns (stream ShowAllWithCritResponse);
+}
+
+message Func {
+  string name = 1;
+  string lang = 3;
+  repeated string keywords = 4;
+  string devName = 5;
+  string devEmail = 6;
+}
+
+message FuncVersion {
+  int32 versionNum = 2;
+  string fnDef = 7;
+}
+
+message AddFnRequest {
+  Func fn = 1;
+  FuncVersion vs = 2;
+}
+message AddFnResponse { string message = 1; }
+
+message AddFnsRequest {
+  Func func = 1;
+  FuncVersion vs = 2;
+}
+message AddFnsResponse { repeated string results = 1; }
+
+message DeleteFnRequest {
+  string funcName = 1;
+  int32 versionNum = 2;
+}
+message DeleteFnResponse { string message = 1; }
+
+message ShowFnRequest {
+  string funcName = 1;
+  int32 versionNum = 2;
+}
+message ShowFnResponse { FuncVersion vs = 1; }
+
+message ShowAllFnsRequest { string funcName = 1; }
+message ShowAllFnsResponse { FuncVersion vs = 1; }
+
+message ShowAllWithCritRequest {
+  string lang = 1;
+  repeated string keywords = 2;
+}
+message ShowAllWithCritResponse { repeated FuncVersion versions = 1; }

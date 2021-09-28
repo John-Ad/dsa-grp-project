@@ -44,20 +44,22 @@ LearningMaterial[] materials = [{
     }
 }];
 
-listener http:Listener ep0 = new (8081, config = {host: "localhost"});
+listener http:Listener ep0 = new (9090, config = {host: "localhost"});
 
-service /studentManagementService on ep0 {
+service /learningEnvManagement on ep0 {
     resource function post learner/add(@http:Payload {} LearnerProfile payload) returns ResponseObject|record {|*http:BadRequest; ResponseObject body;|} {
         // check if learner exists
-        foreach int i in 0 ... learners.length() {
-            if learners[i].username == payload.username {
-                // return error message
-                return {
-                    body: {
-                        status: "error",
-                        message: "user already exists"
-                    }
-                };
+        if learners.length() > 0 {
+            foreach int i in 0 ... learners.length() {
+                if learners[i].username == payload.username {
+                    // return error message
+                    return {
+                        body: {
+                            status: "error",
+                            message: "user already exists"
+                        }
+                    };
+                }
             }
         }
         // add learner to array
@@ -69,16 +71,19 @@ service /studentManagementService on ep0 {
             message: "successfully added user"
         };
     }
+
     resource function post learner/update(@http:Payload {} LearnerProfile payload) returns ResponseObject|record {|*http:BadRequest; ResponseObject body;|} {
         // check if learner exists
-        foreach int i in 0 ... learners.length() {
-            if learners[i].username == payload.username {
-                // override old learner profile with new one
-                learners[i] = payload;
-                return {
-                    status: "ok",
-                    message: "successfully updated learner profile"
-                };
+        if learners.length() > 0 {
+            foreach int i in 0 ... learners.length() {
+                if learners[i].username == payload.username {
+                    // override old learner profile with new one
+                    learners[i] = payload;
+                    return {
+                        status: "ok",
+                        message: "successfully updated learner profile"
+                    };
+                }
             }
         }
 
@@ -100,7 +105,7 @@ service /studentManagementService on ep0 {
                 // check if course exists
                 foreach LearningMaterial material in materials {
                     if material.course == course {
-                        userFound = true;
+                        courseFound = true;
                         // find max score
                         string max = "F";
 

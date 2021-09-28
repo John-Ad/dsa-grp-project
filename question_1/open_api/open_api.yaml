@@ -6,7 +6,7 @@ info:
   description: restful service for managing student profiles and learning materials
 
 servers:
-  - url: http://localhost:8081/learningEnvironmentManagement
+  - url: http://localhost:9090/learningEnvManagement
 
 paths:
   /learner/add: #     add new learner profile

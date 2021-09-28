@@ -1,0 +1,206 @@
+openapi: 3.0.0
+
+info:
+  version: 1.0.0
+  title: student service
+  description: restful service for managing student profiles and learning materials
+
+servers:
+  - url: http://localhost:8081/learningEnvironmentManagement
+
+paths:
+  /learner/add: #     add new learner profile
+    post:
+      description: add new learner profile
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/schemas/Learner_Profile"
+
+      responses:
+        "200":
+          description: successfully added learner profile
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Response_Object"
+        "400":
+          description: failed to add learner profile
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Response_Object"
+
+  /learner/update: #     update learner profile
+    post:
+      description: update learner profile
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/schemas/Learner_Profile"
+
+      responses:
+        "200":
+          description: successfully updated learner profile
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Response_Object"
+        "400":
+          description: failed to update learner profile
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Response_Object"
+
+  /learningMaterials/{course}/{learner}: #     get learning material based on student profile
+    get:
+      description: get material
+      parameters:
+        - name: course
+          in: path
+          description: existing course name
+          required: true
+          schema:
+            type: string
+        - name: learner
+          in: path
+          description: existing learner username
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: successfully retrieved material
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Topic_Object"
+        "400":
+          description: failed to retrieve material
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Response_Object"
+
+components:
+  schemas:
+    Learner_Profile: #     learner profile object definition
+      type: object
+      properties:
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        preferred_formats:
+          type: array
+          items:
+            type: string
+        past_subjects:
+          type: array
+          items:
+            type: object
+            properties:
+              course:
+                type: string
+              score:
+                type: string
+            required:
+              - course
+              - score
+      required:
+        - username
+        - firstName
+        - lastName
+        - preferred_formats
+        - past_subjects
+
+    Learning_Material: #     learning material object definition
+      type: object
+      properties:
+        course:
+          type: string
+        learning_objects:
+          $ref: "#components/schemas/Learning_Object"
+      required:
+        - course
+        - learning_objects
+
+    Learning_Object: #     learning object definition
+      type: object
+      properties:
+        audio:
+          type: array
+          items:
+            $ref: "#components/schemas/Material_Object"
+        video:
+          type: array
+          items:
+            $ref: "#components/schemas/Material_Object"
+        text:
+          type: array
+          items:
+            $ref: "#components/schemas/Material_Object"
+
+      required:
+        - text
+        - audio
+        - video
+
+    Material_Object: #     learning object definition
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        difficulty:
+          type: string
+      required:
+        - name
+        - description
+        - difficulty
+
+    Topic_Object: #     learning object definition
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        difficulty:
+          type: string
+      required:
+        - name
+        - description
+        - difficulty
+
+    Request_Object:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+    Response_Object:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+      required:
+        - status
+        - message
